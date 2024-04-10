@@ -24,71 +24,104 @@
  */
 
 
-const FRESH_PRINCE_URL = "https://upload.wikimedia.org/wikipedia/en/3/33/Fresh_Prince_S1_DVD.jpg";
-const CURB_POSTER_URL = "https://m.media-amazon.com/images/M/MV5BZDY1ZGM4OGItMWMyNS00MDAyLWE2Y2MtZTFhMTU0MGI5ZDFlXkEyXkFqcGdeQXVyMDc5ODIzMw@@._V1_FMjpg_UX1000_.jpg";
-const EAST_LOS_HIGH_POSTER_URL = "https://static.wikia.nocookie.net/hulu/images/6/64/East_Los_High.jpg";
-
-// This is an array of strings (TV show titles)
-let titles = [
-    "Fresh Prince of Bel Air",
-    "Curb Your Enthusiasm",
-    "East Los High"
-];
-// Your final submission should have much more data than this, and 
-// you should use more than just an array of strings to store it all.
-
-
-// This function adds cards the page to display the data in the array
-function showCards() {
-    const cardContainer = document.getElementById("card-container");
-    cardContainer.innerHTML = "";
-    const templateCard = document.querySelector(".card");
-    
-    for (let i = 0; i < titles.length; i++) {
-        let title = titles[i];
-
-        // This part of the code doesn't scale very well! After you add your
-        // own data, you'll need to do something totally different here.
-        let imageURL = "";
-        if (i == 0) {
-            imageURL = FRESH_PRINCE_URL;
-        } else if (i == 1) {
-            imageURL = CURB_POSTER_URL;
-        } else if (i == 2) {
-            imageURL = EAST_LOS_HIGH_POSTER_URL;
-        }
-
-        const nextCard = templateCard.cloneNode(true); // Copy the template card
-        editCardContent(nextCard, title, imageURL); // Edit title and image
-        cardContainer.appendChild(nextCard); // Add new card to the container
+const gpuData = [
+    {
+        name: "AMD Radeon RX 7900 XTX",
+        imageURL: "https://m.media-amazon.com/images/I/71XirBhMcIL._AC_SL1500_.jpg",
+        description: "Powered by AMD's newest chipset for the best quality gaming",
+        specs: ["8GB GDDR6", "256-bit memory interface", "PCI Express 4.0"],
+        hoverImageURL: "https://www.pcworld.com/wp-content/uploads/2023/04/AMD-RDNA-3-Radeon-RX-7900-XTX-4-1.jpg?quality=50&strip=all" 
+    },
+    {
+        name: "Nvidia Geforce RTX 4090",
+        imageURL: "https://store.nvidia.com/en-us/geforce/assets/ASUS%20ROG%20GeForce%20RTX%204090%20OC%20Edition%2024GB.png",
+        description: "Bringing the next level of Geforce performance and capability",
+        specs: ["24GB GDDR6X", "384-bit memory interface", "PCI Express 5.0"],
+        hoverImageURL: "https://reviewed-com-res.cloudinary.com/image/fetch/s--zbj2C7k8--/b_white,c_limit,cs_srgb,f_auto,fl_progressive.strip_profile,g_center,h_668,q_auto,w_1187/https://reviewed-production.s3.amazonaws.com/1665511882932/4090hero.jpg"
+    },
+    {
+        name: "Nvidia Geforce GTX 1660 Super",
+        imageURL: "https://m.media-amazon.com/images/I/71Sx83O9HtL.jpg",
+        description: "Reliable and guaranteed to bring a great gaming experience",
+        specs: ["6GB GDDR6", "192-bit memory interface", "PCI Express 3.0"],
+        hoverImageURL: "https://cdn.thefpsreview.com/wp-content/uploads/2019/10/in-page-logo-1.png"
+    },
+    {
+        name: "MSI Geforce RTX 3090",
+        imageURL: "https://m.media-amazon.com/images/I/61shiWYCJxL._AC_UF894,1000_QL80_.jpg",
+        description: "Provides smooth gameplay and high processing power",
+        specs: ["24GB GDDR6X", "384-bit memory interface", "PCI Express 4.0"],
+        hoverImageURL: "https://i.ebayimg.com/images/g/gq8AAOSwLoJgivWS/s-l1600.jpg"
     }
+    // Allows me to add as many GPUs as needed/liked
+];
+
+// Creates GPU cards
+function createGPUCards() {
+    const cardContainer = document.getElementById("card-container");
+
+    gpuData.forEach(gpu => {
+        const cardTemplate = document.querySelector(".card").cloneNode(true);
+        cardTemplate.style.display = "block";
+        
+        const gpuTitle = cardTemplate.querySelector("h2");
+        gpuTitle.textContent = gpu.name;
+
+        const gpuImage = cardTemplate.querySelector("img");
+        gpuImage.src = gpu.imageURL;
+        gpuImage.alt = gpu.name + " image";
+
+        const gpuDescription = cardTemplate.querySelector("p");
+        gpuDescription.textContent = gpu.description;
+
+        const descriptionList = cardTemplate.querySelector(".description-list");
+        descriptionList.innerHTML = ""; 
+        gpu.specs.forEach(spec => {
+            const listItem = document.createElement("li"); // Bullet points my items
+            listItem.textContent = spec;
+            descriptionList.appendChild(listItem);
+        });
+
+        const bottomImage = cardTemplate.querySelector(".bottom-image");// The add to cart button
+        bottomImage.src = "https://www.divikingdom.com/wp-content/uploads/2021/09/woocommerce-add-to-cart.jpg";
+
+        // Hover effect over images
+        gpuImage.addEventListener("mouseover", function() {
+            gpuImage.src = gpu.hoverImageURL;
+        });
+
+        gpuImage.addEventListener("mouseout", function() {
+            gpuImage.src = gpu.imageURL;
+        });
+
+        cardContainer.appendChild(cardTemplate);
+    });
+}
+// Call the function to create GPU cards when the page loads
+window.addEventListener("DOMContentLoaded", createGPUCards);
+
+// Array of my PC items
+const pcBuildItems = [
+    "CPU - AMD Ryzen 5 3600X 3.8 GHz 6-Core Processor",
+    "GPU - Gigabyte OC GeForce GTX 1660 Super",
+    "RAM - Corsair Vengeance RGB Pro 16 GB (2 x 8 GB)",
+    "Storage (SSD) - Western Digital Blue 500 GB M.2",
+    'Storage (HDD) - Seagate Barracuda Compute 2 TB 3.5"',
+    "Motherboard - MSI B450 TOMAHAWK MAX ATX AM4",
+    "Power Supply - EVGA 600 BQ 600 W 80+",
+    "Case - Thermaltake V200 RGB ATX Mid Tower",
+    "Cooling (CPU Cooler/Fans) - Stock!"
+];
+
+// Function for Noah's PC Build button
+function pcBuild() {
+    let message = "Noah's PC Build Items:\n";
+    pcBuildItems.forEach((item, index) => {
+        message += (index + 1) + ". " + item + "\n";
+    });
+    
+    alert(message);
 }
 
-function editCardContent(card, newTitle, newImageURL) {
-    card.style.display = "block";
-
-    const cardHeader = card.querySelector("h2");
-    cardHeader.textContent = newTitle;
-
-    const cardImage = card.querySelector("img");
-    cardImage.src = newImageURL;
-    cardImage.alt = newTitle + " Poster";
-
-    // You can use console.log to help you debug!
-    // View the output by right clicking on your website,
-    // select "Inspect", then click on the "Console" tab
-    console.log("new card:", newTitle, "- html: ", card);
-}
-
-// This calls the addCards() function when the page is first loaded
-document.addEventListener("DOMContentLoaded", showCards);
-
-function quoteAlert() {
-    console.log("Button Clicked!")
-    alert("I guess I can kiss heaven goodbye, because it got to be a sin to look this good!");
-}
-
-function removeLastCard() {
-    titles.pop(); // Remove last item in titles array
-    showCards(); // Call showCards again to refresh
-}
+// Event listener for the button click
+document.getElementById("pcBuildButton").addEventListener("click", pcBuild);
